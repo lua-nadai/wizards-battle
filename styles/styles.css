@@ -1,0 +1,28 @@
+body{
+    padding: 50px 0px;
+    display: flex;
+	justify-content: space-around;
+	align-items: center;
+    background-color: peru;
+}
+
+#canvas{
+    border: 1px solid red;
+}
+
+
+#intro{
+    width: 350px;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    border: 1px solid red;
+}
+
+#play-button{
+    width: 150px;
+    font-size: 20px;
+    padding: 5px;
+
+}
