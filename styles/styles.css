@@ -4,6 +4,8 @@ body{
 	justify-content: space-around;
 	align-items: center;
     background-color: peru;
+    /* background-image: url('../images/background.png');
+    background-position: center; */
 }
 
 #canvas{
@@ -13,16 +15,35 @@ body{
 
 #intro{
     width: 350px;
-    height: 150px;
+    height: 450px;
     display: flex;
     flex-direction: column;
     text-align: center;
+    justify-content: center;
     border: 1px solid red;
+    
 }
 
 #play-button{
     width: 150px;
     font-size: 20px;
     padding: 5px;
+    margin: auto 100px 30px;
+}
 
+#commands-button{
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    background-color: white;
+    border: 1px solid red;
+    height: 120px;
+}
+
+#commands-button button{
+    padding: 10px 20px;
+    margin: 30px 20px;
+    font-size: 30px;
+    /* border: none;
+    background-color: white; */
 }

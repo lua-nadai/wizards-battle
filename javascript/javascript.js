@@ -1,6 +1,7 @@
+// require('./index')
 
 const diceDamage = Math.floor(Math.random()*7);
-const diceSuperDamage = Math.floor(Math.random() * 7); // desconsiderar o 0 *BONUS
+const diceSuperDamage = Math.floor(Math.random() * 7); // desconsiderar o 0 >>> *BONUS
 
 // console.log(diceSuperDamage)
 // console.log(diceDamage)
@@ -9,7 +10,7 @@ class Wizard {
     constructor(hp, strength, shield, damageSuper) {
         this.hp = 500;
         this.strength = 30;
-        this.shield = 500;
+        this.shield = 1000;
         this.strengthSuper = this.strength * 2;
     };
 
@@ -74,14 +75,64 @@ class Round {
        return [this.wizard, this.dragon];
 
     };
-
 };
+
+
+
+const playerCommands = document.getElementById("commands-button");
+const playerCommandAttack = document.getElementById('command-attack');
+const playerCommandShield = document.getElementById('command-shield');
+const playerCommandSuperAttack = document.getElementById('command-superattack')
+
+playerCommandAttack.onclick = () => {
+    attackButton();
+};
+
+
+const attackButtonElement = document.createElement('button')
+
+attackButtonElement.addEventListener('click', attackButton)
+attackButtonElement.innerText = 'Attack'
+
+const shieldButtonElement = document.createElement('button')
+
+shieldButtonElement.addEventListener('click', shieldButton)
+shieldButtonElement.innerText = 'Shield'
+
+
+function attackButton(){ 
+    playerCommands.innerHTML = rounds.wizardAttack();
+    setTimeout(() => {
+        receiveDmg()
+    }, 1000);
+    
+    setTimeout(() => {
+        playerCommands.innerHTML = ''
+        playerCommands.appendChild(attackButtonElement);
+        playerCommands.appendChild(shieldButtonElement);
+    }, 2000);
+}
+
+function receiveDmg(){
+    playerCommands.innerHTML = rounds.dragonAttack();
+}
+
+document.getElementById('command-shield').onclick = () => {
+    shieldButton();
+};
+
+function shieldButton() {
+    playerCommands.innerHTML = "Damage blocked!"
+}
+
+
+
 
 // -----------------------
 // Test
-const wizard1 = new Wizard
-const dragon1 = new Dragon
-const round1 = new Round
+const wizardPlayer = new Wizard
+const dragonBot = new Dragon
+const rounds = new Round
 
 // console.log(wizard1.attackWizard())
 // console.log(wizard1.receiveDamage(180))
