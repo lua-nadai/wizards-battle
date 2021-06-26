@@ -1,25 +1,43 @@
-// require('./index')
+function diceDamage() {
+    return Math.floor(Math.random() * 7);
+}
 
-const diceDamage = Math.floor(Math.random()*7);
-const diceSuperDamage = Math.floor(Math.random() * 7); // desconsiderar o 0 >>> *BONUS
-
-// console.log(diceSuperDamage)
-// console.log(diceDamage)
+function diceSuperDamage(){ 
+    return Math.floor(Math.random() * 7) + 1;
+} // pegar numeros 4 - 7 >>> *BONUS
 
 class Wizard {
-    constructor(hp, strength, shield, damageSuper) {
+    constructor(hp, strength, shield, damageSuper, stackSuper) {
         this.hp = 500;
         this.strength = 30;
         this.shield = 1000;
         this.strengthSuper = this.strength * 2;
+        this.stackSuper = 0;
+        this.strength1 = 30;
     };
 
-    attackWizard(){
-        return this.strength * diceDamage;
+    attackWizard() {
+        this.strength1 = this.strength * diceDamage();
+        this.stackSuperAttack();
+        return this.strength1;  
     };
 
+    stackSuperAttack() {
+        console.log(this.strength1)
+        if (this.strength1 >= 1) {       
+           this.stackSuper += 1
+        } else {
+            return this.stackSuper = this.stackSuper;
+        }
+    }
 
-    receiveDamage(damage){
+    attackSuper() {
+        if (this.stackSuper === 3) {
+            return this.strengthSuper * diceSuperDamage();
+        }
+    }
+
+    receiveDamage(damage) {
         this.hp -= damage;
 
         if(this.hp <= 0){
@@ -27,7 +45,6 @@ class Wizard {
         };
         return `The Wizard has received ${damage} points of damage`
     };
-
 };
 
 class Dragon {
@@ -38,7 +55,7 @@ class Dragon {
     };
 
     attackDragon() {
-        return this.strength * diceDamage;
+        return this.strength * diceDamage();
     };
 
     receiveDamage(damage) {
@@ -50,44 +67,57 @@ class Dragon {
         return `The Dragon has received ${damage} points of damage`;
     };
 
+    receiveSuperDamage(damage) {
+    
+        if (wizardPlayer.stackSuper < 3) {
+
+            return `You don't have mana enought...`;
+        }
+        this.hp -= damage;
+        wizardPlayer.stackSuper = 0;
+        return `The Dragon has received ${damage} points of damage`;  
+    };
+
 };
+
+const wizardPlayer = new Wizard;
+const dragonBot = new Dragon;
 
 
 class Round {
-    constructor(){
-        this.wizard = new Wizard;
-        this.dragon = new Dragon;
+    constructor() {
+        this.wizard = wizardPlayer;
+        this.dragon = dragonBot;
     }
 
-    wizardAttack(){
+    wizardAttack() {
         let receiveDamageDragon = this.dragon.receiveDamage(this.wizard.attackWizard());
             
         return receiveDamageDragon;
     };
 
-    dragonAttack(){
+    dragonAttack() {
         let receiveDamageWizard = this.wizard.receiveDamage(this.dragon.attackDragon());
 
         return receiveDamageWizard;
     };
 
-    updateStatus(){
-       return [this.wizard, this.dragon];
+    wizardSuperAttack() {
+        let receiveSuperDamageDragon = this.dragon.receiveSuperDamage(this.wizard.attackSuper());
 
-    };
+        return receiveSuperDamageDragon;
+    }
+
 };
 
-
+const rounds = new Round;
 
 const playerCommands = document.getElementById("commands-button");
 const playerCommandAttack = document.getElementById('command-attack');
 const playerCommandShield = document.getElementById('command-shield');
 const playerCommandSuperAttack = document.getElementById('command-superattack')
 
-playerCommandAttack.onclick = () => {
-    attackButton();
-};
-
+// Button Elements
 
 const attackButtonElement = document.createElement('button')
 
@@ -99,8 +129,26 @@ const shieldButtonElement = document.createElement('button')
 shieldButtonElement.addEventListener('click', shieldButton)
 shieldButtonElement.innerText = 'Shield'
 
+const superAttackElement = document.createElement('button')
 
-function attackButton(){ 
+superAttackElement.addEventListener('click', superAttackButton)
+superAttackElement.innerText = 'Super Attack'
+
+// ---
+
+playerCommandAttack.onclick = () => {
+    attackButton();
+};
+
+playerCommandShield.onclick = () => {
+    shieldButton();
+};
+
+playerCommandSuperAttack.onclick = () => {
+    superAttackButton();
+};
+
+function attackButton() { 
     playerCommands.innerHTML = rounds.wizardAttack();
     setTimeout(() => {
         receiveDmg()
@@ -110,41 +158,34 @@ function attackButton(){
         playerCommands.innerHTML = ''
         playerCommands.appendChild(attackButtonElement);
         playerCommands.appendChild(shieldButtonElement);
+        playerCommands.appendChild(superAttackElement);
+        updateCanvas()
     }, 2000);
-}
+};
 
 function receiveDmg(){
     playerCommands.innerHTML = rounds.dragonAttack();
-}
-
-document.getElementById('command-shield').onclick = () => {
-    shieldButton();
 };
 
 function shieldButton() {
-    playerCommands.innerHTML = "Damage blocked!"
-}
+    playerCommands.innerHTML = "Damage blocked!";
 
+    setTimeout(() => {
+        playerCommands.innerHTML = ''
+        playerCommands.appendChild(attackButtonElement);
+        playerCommands.appendChild(shieldButtonElement);
+        playerCommands.appendChild(superAttackElement);
+        updateCanvas();
+    }, 2000);
+};
 
-
-
-// -----------------------
-// Test
-const wizardPlayer = new Wizard
-const dragonBot = new Dragon
-const rounds = new Round
-
-// console.log(wizard1.attackWizard())
-// console.log(wizard1.receiveDamage(180))
-// console.log(dragon1.attackDragon())
-// console.log(round1.wizardAttack())
-// console.log(round1.dragonAttack())
-// console.log(round1.updateStatus())
-
-// -----------------------
-
-
-
-
-
-
+function superAttackButton() {
+    playerCommands.innerHTML = rounds.wizardSuperAttack();
+    setTimeout(() => {
+        playerCommands.innerHTML = ''
+        playerCommands.appendChild(attackButtonElement);
+        playerCommands.appendChild(shieldButtonElement);
+        playerCommands.appendChild(superAttackElement);
+        updateCanvas();
+    }, 2000);
+};
