@@ -7,8 +7,9 @@ function diceSuperDamage(){
 } // pegar numeros 4 - 7 >>> *BONUS
 
 class Wizard {
-    constructor(hp, strength, shield, damageSuper, stackSuper) {
+    constructor() {
         this.hp = 500;
+        this.maxHp = 500;
         this.strength = 30;
         this.shield = 1000;
         this.strengthSuper = this.strength * 2;
@@ -23,7 +24,6 @@ class Wizard {
     };
 
     stackSuperAttack() {
-        console.log(this.strength1)
         if (this.strength1 >= 1) {       
            this.stackSuper += 1
         } else {
@@ -48,8 +48,9 @@ class Wizard {
 };
 
 class Dragon {
-    constructor(hp, strength) {
+    constructor() {
         this.hp = 1000;
+        this.maxHp = 1000;
         this.strength = 10;
 
     };
@@ -67,6 +68,7 @@ class Dragon {
         return `The Dragon has received ${damage} points of damage`;
     };
 
+
     receiveSuperDamage(damage) {
     
         if (wizardPlayer.stackSuper < 3) {
@@ -80,37 +82,60 @@ class Dragon {
 
 };
 
-const wizardPlayer = new Wizard;
-const dragonBot = new Dragon;
+
+const wizardPlayer = new Wizard();
+const dragonBot = new Dragon();
 
 
 class Round {
-    constructor() {
-        this.wizard = wizardPlayer;
-        this.dragon = dragonBot;
-    }
 
     wizardAttack() {
-        let receiveDamageDragon = this.dragon.receiveDamage(this.wizard.attackWizard());
+        let receiveDamageDragon = dragonBot.receiveDamage(wizardPlayer.attackWizard());
             
         return receiveDamageDragon;
     };
 
     dragonAttack() {
-        let receiveDamageWizard = this.wizard.receiveDamage(this.dragon.attackDragon());
+        let receiveDamageWizard = wizardPlayer.receiveDamage(dragonBot.attackDragon());
 
         return receiveDamageWizard;
     };
 
     wizardSuperAttack() {
-        let receiveSuperDamageDragon = this.dragon.receiveSuperDamage(this.wizard.attackSuper());
+        let receiveSuperDamageDragon = dragonBot.receiveSuperDamage(wizardPlayer.attackSuper());
 
         return receiveSuperDamageDragon;
     }
 
+    updateHpWizard(){
+        return wizardPlayer.hp 
+        
+    }
+
+    updateHpDragon(){
+        return dragonBot.hp
+    }
+
 };
 
+
+function hpBarWizard () { 
+    const hpPercent = wizardPlayer.hp / wizardPlayer.maxHp
+
+    return 250 * hpPercent
+
+}
+
+function hpBarDragon() {
+    const hpPercent = dragonBot.hp / dragonBot.maxHp
+
+    return 400 * hpPercent
+
+}
+
+
 const rounds = new Round;
+
 
 const playerCommands = document.getElementById("commands-button");
 const playerCommandAttack = document.getElementById('command-attack');
@@ -189,3 +214,6 @@ function superAttackButton() {
         updateCanvas();
     }, 2000);
 };
+
+
+

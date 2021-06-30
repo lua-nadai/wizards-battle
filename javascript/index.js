@@ -79,11 +79,16 @@ function updateCanvas() {
     
 
     // HP Bar
-    ctx.fillStyle = 'red';
+    ctx.fillStyle = 'black';
     ctx.fillRect(890, 220, 400, 30);
     ctx.fillRect(10, 360, 250, 30);
 
-    ctx.fillStyle = 'black';
+    ctx.fillStyle = 'red';
+    ctx.fillRect(890, 220, hpBarDragon(), 30);
+    ctx.fillRect(10, 360, hpBarWizard(), 30);
+
+
+    ctx.strokeStyle = 'black';
     ctx.strokeRect(890, 220, 400, 30);
     ctx.strokeRect(10, 360, 250, 30);
 

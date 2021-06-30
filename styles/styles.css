@@ -1,49 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Iceland&display=swap');
+
+
 body{
+    font-family: 'Iceland';
+    font-size: 20px;
     padding: 50px 0px;
     display: flex;
 	justify-content: space-around;
 	align-items: center;
     background-color: peru;
-    /* background-image: url('../images/background.png');
-    background-position: center; */
+    background-image: url('../images/background.png');
 }
 
 #canvas{
-    border: 1px solid red;
+    /* border: 1px solid red; */
 }
 
 
 #intro{
     width: 350px;
-    height: 450px;
+    height: 510px;
+    background-image: url("../images/scroll.png");
+    background-repeat: no-repeat;
+    background-size: cover;
     display: flex;
     flex-direction: column;
     text-align: center;
     justify-content: center;
-    border: 1px solid red;
-    
+    /* border: 1px solid red; */
+    padding-left: 50px;
 }
 
+#intro h1{
+    margin-top: 50px;
+}
+
+
 #play-button{
+    font-family: 'Iceland';
     width: 150px;
-    font-size: 20px;
-    padding: 5px;
-    margin: auto 100px 30px;
+    font-size: 29px;
+    padding: 10px;
+    margin: auto 90px 80px;
+    border-radius: 15px;
+    border-color: rgb(108, 55, 30);
 }
 
 #commands-button{
     display: flex;
     justify-content: space-around;
     text-align: center;
-    background-color: white;
-    border: 1px solid red;
+    /* background-color: white; */
+    /* border: 1px solid red; */
     height: 120px;
+    color: white;
+    font-size: 60px;
+    -webkit-text-stroke: 1px black;
 }
 
 #commands-button button{
+    font-family: 'Iceland';
+    font-size: 50px;
+    color: white;
     padding: 10px 20px;
-    margin: 30px 20px;
-    font-size: 30px;
-    /* border: none;
-    background-color: white; */
+    margin: 20px 20px;
+    border-radius: 15px;
+    border-color:black;
+    background-image: linear-gradient(rgba(102, 48, 17, 0.883), rgba(255, 230, 0, 0.527));
 }
