@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Iceland&display=swap');
 
-
 body{
     font-family: 'Iceland';
     font-size: 20px;
@@ -11,11 +10,6 @@ body{
     background-color: peru;
     background-image: url('../images/background.png');
 }
-
-#canvas{
-    /* border: 1px solid red; */
-}
-
 
 #intro{
     width: 350px;
@@ -67,4 +61,9 @@ body{
     border-radius: 15px;
     border-color:black;
     background-image: linear-gradient(rgba(102, 48, 17, 0.883), rgba(255, 230, 0, 0.527));
+}
+
+#commands-button p{
+    -webkit-text-stroke: 1px black;
+
 }

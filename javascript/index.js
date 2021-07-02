@@ -24,10 +24,13 @@ imgDragonDead.src = "./images/dragondead.png";
 const imgIconBoss = new Image();
 imgIconBoss.src = "./images/iconboss.png";
 
-const imgShield = new Image();
+const imgDragonSuper = new Image();
+imgDragonSuper.src = "./images/dragonsuper.png";
+
+const imgShield = new Image(); // Colocar
 imgShield.src = "./images/shield.png"
 
-const imgFireball = new Image();
+const imgFireball = new Image(); // Colocar
 imgFireball.src = "./images/fireball1.png";
 
 const imgGameOver = new Image();
@@ -38,45 +41,53 @@ imgWinGame.src = "./images/win.png";
 
 // ---
 
+let frames = 0;
+
 document.getElementById('play-button').onclick = () => {
     playGame();
 };
 
 function playGame() {
-    updateCanvas();
 
-    imgBackground.onload = () => {
-        ctx.drawImage(imgBackground, 0, 0)
-        ctx.drawImage(imgWizard, 50, 400, 230, 200);
-        ctx.drawImage(imgDragon, 950, 250, 350, 350);
-        ctx.drawImage(imgIconBoss, 780, 200, 100, 65);
+    // imgBackground.onload = () => {
+    //     ctx.drawImage(imgBackground, 0, 0)
+    //     ctx.drawImage(imgWizard, 50, 400, 230, 200);
+    //     ctx.drawImage(imgDragon, 950, 250, 350, 350);
+    //     ctx.drawImage(imgIconBoss, 780, 200, 100, 65);
       
-        // HP Bar
-        ctx.fillStyle = 'red';
-        ctx.fillRect(890, 220, 400, 30);
+    //     // HP Bar
+    //     ctx.fillStyle = 'red';
+    //     ctx.fillRect(890, 220, 400, 30);
 
-        ctx.fillRect(10, 360, 250, 30);
+    //     ctx.fillRect(10, 360, 250, 30);
 
-        ctx.fillStyle = 'black';
-        ctx.fillRect(1290, 220, 0, 30);
+    //     ctx.fillStyle = 'black';
+    //     ctx.fillRect(1290, 220, 0, 30);
 
-        ctx.fillRect(10, 360, 250, 30);
+    //     ctx.fillRect(10, 360, 250, 30);
 
-        // HP Number
-        ctx.font = '30px arial';
-        ctx.fillText(`500 / ${wizardPlayer.hp}`, 70, 350);
-        ctx.fillText(`1000 / ${dragonBot.hp}`, 1000, 210);
-    };
+    //     // HP Number
+    //     ctx.font = '40px Iceland';
+    //     ctx.fillText(`500 / ${wizardPlayer.hp}`, 70, 350);
+    //     ctx.fillText(`1000 / ${dragonBot.hp}`, 1000, 210);
+    // };
+   
+    updateCanvas()
 };
 
+setInterval(() => {
+    frames += 1;;
+}, 10)
+
+
 function updateCanvas() {
+    console.log("1")
     ctx.clearRect(0, 0, cWidth, cHeight)
 
-    ctx.drawImage(imgBackground, 0, 0)
+    ctx.drawImage(imgBackground, 0, 0);
     ctx.drawImage(imgWizard, 50, 400, 230, 200);
     ctx.drawImage(imgDragon, 950, 250, 350, 350);
     ctx.drawImage(imgIconBoss, 780, 200, 100, 65);
-    
 
     // HP Bar
     ctx.fillStyle = 'black';
@@ -94,24 +105,29 @@ function updateCanvas() {
 
     // HP Number
     ctx.fillStyle = 'red';
-    ctx.font = '30px arial';
+    ctx.font = '40px Iceland';
 
-    ctx.fillText(`500 / ${wizardPlayer.hp}`, 70, 350);
-    ctx.strokeText(`500 / ${wizardPlayer.hp}`, 70, 350);
+    ctx.fillText(`${wizardPlayer.hp} / ${wizardPlayer.maxHp}`, 60, 350);
+    ctx.strokeText(`${wizardPlayer.hp} / ${wizardPlayer.maxHp}`, 60, 350);
 
-    ctx.fillText(`1000 / ${dragonBot.hp}`, 1000, 210);
-    ctx.strokeText(`1000 / ${dragonBot.hp}`, 1000, 210);
+    ctx.fillText(`${dragonBot.hp} / ${dragonBot.maxHp}`, 990, 210);
+    ctx.strokeText(`${dragonBot.hp} / ${dragonBot.maxHp}`, 990, 210);
 
-    // if (playerCommands.innerHTML === "Damage blocked!"){
-    //     setTimeout(() =>{
-            
-    //         ctx.drawImage(imgShield, 50, 400)
-    //     }
+    // MP Bar
 
-    // }
+    ctx.fillStyle = 'black'
+    ctx.fillRect(10, 395, 250, 15);
+
+    ctx.fillStyle = 'blue';
+    ctx.fillRect(10, 395, mpBarWizard(), 15);
+
+    ctx.strokeStyle = 'black'
+    ctx.strokeRect(10, 395, mpBarWizard(), 15);
 
     finalGame();
 };
+
+
 
 function finalGame(){
     if(wizardPlayer.hp <= 0) {
@@ -130,25 +146,56 @@ function finalGame(){
     };
 };
 
+const imgAttackWizard1 = new Image();
+imgAttackWizard1.src = "./images/wizardattack/attack1.png"
+
+// const imgAttackWizard2 = new Image();
+// imgAttackWizard2.src = "./images/wizardattack/attack2.png"
+
+// const imgAttackWizard3 = new Image();
+// imgAttackWizard3.src = "./images/wizardattack/attack3.png"
+
+// const imgAttackWizard4 = new Image();
+// imgAttackWizard4.src = "./images/wizardattack/attack4.png"
+
+class Attacks {
+    constructor(x,y){
+        this.posInitial = x;
+        this.posEnd = y;
+        this.speed = 10;
+    }
+
+    draw(){
+        ctx.drawImage(imgAttackWizard1, this.posInitial, 450, 100, 90)
+        
+    }
+
+    move(){
+        setTimeout(() => {      
+            if(this.posInitial < this.posEnd){
+                this.posInitial += this.speed;
+            }
+        }, 1)
+        
+    }
+
+}
+
+const attackAnimation = new Attacks(200, 950)
+
+function updateAttacks() {
+    updateCanvas()
+
+    setInterval(() => {
+        attackAnimation.draw()
+        attackAnimation.move();
+            
+    }, 1);
+
+    if(frames % 90 === 0){
+        attackAnimation.move();
+    }
+
+}
 
 
-
-
-
-
-
-
-
-
-
-
-
-// function animationAttackWizard(){
-//     let fireballX = 0;
-//     let fireballY = 0;
-    
-//     ctx.drawImage(imgFireball, fireballX, fireballY, 140, 90)
-    
-//     ctx.beginPath()
-//     ctx.moveTo(500, 600)
-// }
