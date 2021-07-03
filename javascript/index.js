@@ -30,8 +30,11 @@ imgDragonSuper.src = "./images/dragonsuper.png";
 const imgShield = new Image(); // Colocar
 imgShield.src = "./images/shield.png"
 
-const imgFireball = new Image(); // Colocar
-imgFireball.src = "./images/fireball1.png";
+const imgAttackDragon = new Image(); // Colocar
+imgAttackDragon.src = "./images/attackdragon.png";
+
+const imgAttackWizard = new Image();
+imgAttackWizard.src = "./images/attackwizard.png";
 
 const imgGameOver = new Image();
 imgGameOver.src = "./images/gameover.png";
@@ -43,93 +46,150 @@ imgWinGame.src = "./images/win.png";
 
 let frames = 0;
 
+class Canvas {
+
+    clearCanvas() {
+        ctx.clearRect(0, 0, cWidth, cHeight);
+    };
+
+    draw() {
+        ctx.drawImage(imgBackground, 0, 0);
+        ctx.drawImage(imgWizard, 50, 400, 230, 200);
+        ctx.drawImage(imgDragon, 950, 250, 350, 350);
+        ctx.drawImage(imgIconBoss, 780, 200, 100, 65);
+
+        // HP Bar
+        ctx.fillStyle = 'black';
+        ctx.fillRect(890, 220, 400, 30);
+        ctx.fillRect(10, 360, 250, 30);
+
+        ctx.fillStyle = 'red';
+        ctx.fillRect(890, 220, hpBarDragon(), 30);
+        ctx.fillRect(10, 360, hpBarWizard(), 30);
+
+
+        ctx.strokeStyle = 'black';
+        ctx.strokeRect(890, 220, 400, 30);
+        ctx.strokeRect(10, 360, 250, 30);
+
+        // HP Number
+        ctx.fillStyle = 'red';
+        ctx.font = '40px Iceland';
+
+        ctx.fillText(`${wizardPlayer.hp} / ${wizardPlayer.maxHp}`, 60, 350);
+        ctx.strokeText(`${wizardPlayer.hp} / ${wizardPlayer.maxHp}`, 60, 350);
+
+        ctx.fillText(`${dragonBot.hp} / ${dragonBot.maxHp}`, 990, 210);
+        ctx.strokeText(`${dragonBot.hp} / ${dragonBot.maxHp}`, 990, 210);
+
+        // MP Bar
+
+        ctx.fillStyle = 'black';
+        ctx.fillRect(10, 395, 250, 15);
+
+        ctx.fillStyle = 'blue';
+        ctx.fillRect(10, 395, mpBarWizard(), 15);
+
+        ctx.strokeStyle = 'black';
+        ctx.strokeRect(10, 395, mpBarWizard(), 15);
+    };
+
+
+    finalGame() {
+        if (wizardPlayer.hp <= 0) {
+            ctx.clearRect(0, 0, cWidth, cHeight);
+            ctx.drawImage(imgBackground, 0, 0);
+            ctx.drawImage(imgGameOver, 450, 275, 400, 150);
+            ctx.drawImage(imgDragon, 950, 250, 350, 350);
+            ctx.drawImage(imgWizardDead, 50, 440, 230, 200);
+        };
+        if (dragonBot.hp <= 0) {
+            ctx.clearRect(0, 0, cWidth, cHeight);
+            ctx.drawImage(imgBackground, 0, 0);
+            ctx.drawImage(imgWinGame, 500, 275, 300, 150);
+            ctx.drawImage(imgWizard, 50, 400, 230, 200);
+            ctx.drawImage(imgDragonDead, 950, 350, 350, 350);
+        };
+    };
+
+    updateCanvas() {
+        
+        this.clearCanvas();
+        this.draw();
+        this.finalGame();
+    };
+
+
+    attackWizard(){
+
+        const attackAnimation = new Attacks(imgAttackWizard, 200, 950);
+
+        const timeAnimation = setInterval(() => {
+            this.updateCanvas();
+            attackAnimation.moveRight();
+            attackAnimation.draw();
+        }, 15);
+
+
+        setTimeout(() => {
+            clearInterval(timeAnimation);
+        }, 1500);
+    };
+
+    attackDragon() {
+
+        const attackAnimation = new Attacks(imgAttackDragon, 950, 180);
+
+        const timeAnimation = setInterval(() => {
+            this.updateCanvas();
+            attackAnimation.moveLeft();
+            attackAnimation.draw();
+        }, 15);
+
+        setTimeout(() => {
+            clearInterval(timeAnimation);
+        }, 1800);
+    };
+
+    shieldWizard() {
+
+        const shieldAnimation = new Attacks(imgShield, 200, 180);
+        const attackAnimation = new Attacks(imgAttackDragon, 950, 250);
+
+        const timeAnimation = setInterval(() => {
+            this.updateCanvas();
+            shieldAnimation.draw();
+            attackAnimation.moveLeft();
+            attackAnimation.draw();
+        }, 20);
+
+        setTimeout(() => {
+            clearInterval(timeAnimation);
+        }, 1800);    
+    };
+
+};
+
 document.getElementById('play-button').onclick = () => {
     playGame();
+    document.getElementById("commands-button").style.visibility = "visible"
 };
+
+let canvasBoard = new Canvas();
 
 function playGame() {
 
-    // imgBackground.onload = () => {
-    //     ctx.drawImage(imgBackground, 0, 0)
-    //     ctx.drawImage(imgWizard, 50, 400, 230, 200);
-    //     ctx.drawImage(imgDragon, 950, 250, 350, 350);
-    //     ctx.drawImage(imgIconBoss, 780, 200, 100, 65);
-      
-    //     // HP Bar
-    //     ctx.fillStyle = 'red';
-    //     ctx.fillRect(890, 220, 400, 30);
+   canvasBoard.draw();
 
-    //     ctx.fillRect(10, 360, 250, 30);
+   canvasBoard.finalGame();
 
-    //     ctx.fillStyle = 'black';
-    //     ctx.fillRect(1290, 220, 0, 30);
-
-    //     ctx.fillRect(10, 360, 250, 30);
-
-    //     // HP Number
-    //     ctx.font = '40px Iceland';
-    //     ctx.fillText(`500 / ${wizardPlayer.hp}`, 70, 350);
-    //     ctx.fillText(`1000 / ${dragonBot.hp}`, 1000, 210);
-    // };
-   
-    updateCanvas()
+   canvasBoard.updateCanvas();
+    
 };
-
-setInterval(() => {
-    frames += 1;;
-}, 10)
-
-
-function updateCanvas() {
-    console.log("1")
-    ctx.clearRect(0, 0, cWidth, cHeight)
-
-    ctx.drawImage(imgBackground, 0, 0);
-    ctx.drawImage(imgWizard, 50, 400, 230, 200);
-    ctx.drawImage(imgDragon, 950, 250, 350, 350);
-    ctx.drawImage(imgIconBoss, 780, 200, 100, 65);
-
-    // HP Bar
-    ctx.fillStyle = 'black';
-    ctx.fillRect(890, 220, 400, 30);
-    ctx.fillRect(10, 360, 250, 30);
-
-    ctx.fillStyle = 'red';
-    ctx.fillRect(890, 220, hpBarDragon(), 30);
-    ctx.fillRect(10, 360, hpBarWizard(), 30);
-
-
-    ctx.strokeStyle = 'black';
-    ctx.strokeRect(890, 220, 400, 30);
-    ctx.strokeRect(10, 360, 250, 30);
-
-    // HP Number
-    ctx.fillStyle = 'red';
-    ctx.font = '40px Iceland';
-
-    ctx.fillText(`${wizardPlayer.hp} / ${wizardPlayer.maxHp}`, 60, 350);
-    ctx.strokeText(`${wizardPlayer.hp} / ${wizardPlayer.maxHp}`, 60, 350);
-
-    ctx.fillText(`${dragonBot.hp} / ${dragonBot.maxHp}`, 990, 210);
-    ctx.strokeText(`${dragonBot.hp} / ${dragonBot.maxHp}`, 990, 210);
-
-    // MP Bar
-
-    ctx.fillStyle = 'black'
-    ctx.fillRect(10, 395, 250, 15);
-
-    ctx.fillStyle = 'blue';
-    ctx.fillRect(10, 395, mpBarWizard(), 15);
-
-    ctx.strokeStyle = 'black'
-    ctx.strokeRect(10, 395, mpBarWizard(), 15);
-
-    finalGame();
-};
-
 
 
 function finalGame(){
+    
     if(wizardPlayer.hp <= 0) {
         ctx.clearRect(0, 0, cWidth, cHeight);
         ctx.drawImage(imgBackground, 0, 0);
@@ -142,60 +202,36 @@ function finalGame(){
         ctx.drawImage(imgBackground, 0, 0);
         ctx.drawImage(imgWinGame, 500, 275, 300, 150);
         ctx.drawImage(imgWizard, 50, 400, 230, 200);
-        ctx.drawImage(imgDragonDead, 950, 350, 350, 350);        
+        ctx.drawImage(imgDragonDead, 950, 350, 350, 350);
     };
 };
 
-const imgAttackWizard1 = new Image();
-imgAttackWizard1.src = "./images/wizardattack/attack1.png"
-
-// const imgAttackWizard2 = new Image();
-// imgAttackWizard2.src = "./images/wizardattack/attack2.png"
-
-// const imgAttackWizard3 = new Image();
-// imgAttackWizard3.src = "./images/wizardattack/attack3.png"
-
-// const imgAttackWizard4 = new Image();
-// imgAttackWizard4.src = "./images/wizardattack/attack4.png"
-
 class Attacks {
-    constructor(x,y){
+    constructor(img, x, y) {
+        this.imgAttack = img;
         this.posInitial = x;
         this.posEnd = y;
         this.speed = 10;
-    }
+    };
 
-    draw(){
-        ctx.drawImage(imgAttackWizard1, this.posInitial, 450, 100, 90)
+    draw() {
+        ctx.drawImage(this.imgAttack, this.posInitial, 450, 100, 90);
         
-    }
+    };
 
-    move(){
-        setTimeout(() => {      
-            if(this.posInitial < this.posEnd){
-                this.posInitial += this.speed;
-            }
-        }, 1)
-        
-    }
+    moveRight() {
+        if(this.posInitial <= this.posEnd) {
+            this.posInitial += this.speed;
+        } else {
+            this.posInitial = this.posInitial;
+        };
+    };
 
-}
-
-const attackAnimation = new Attacks(200, 950)
-
-function updateAttacks() {
-    updateCanvas()
-
-    setInterval(() => {
-        attackAnimation.draw()
-        attackAnimation.move();
-            
-    }, 1);
-
-    if(frames % 90 === 0){
-        attackAnimation.move();
-    }
-
-}
-
-
+    moveLeft(){
+        if (this.posInitial >= this.posEnd) {
+            this.posInitial -= this.speed;
+        } else {
+            this.posInitial = this.posInitial;
+        };
+    };
+};

@@ -2,7 +2,7 @@ function diceDamage() {
     return Math.floor(Math.random() * 7);
 };
 
-function diceSuperDamage(){ 
+function diceSuperDamage() {
     return Math.floor(Math.random() * 7) + 1;
 };
 
@@ -21,15 +21,15 @@ class Wizard {
         this.strength1 = this.strength * diceDamage();
         this.stackSuperAttack();
 
-        updateAttacks()
-    
+        
+        canvasBoard.attackWizard();
 
-        return this.strength1;  
+        return this.strength1;
     };
 
     stackSuperAttack() {
-        if (this.strength1 >= 1) {       
-           this.stackSuper += 1
+        if (this.strength1 >= 1) {
+            this.stackSuper += 1
         } else {
             return this.stackSuper = this.stackSuper;
         }
@@ -41,8 +41,11 @@ class Wizard {
         };
     };
 
-    shieldWizard(){
-        if(dragonBot.stackSuper === 3){
+    shieldWizard() {
+
+        canvasBoard.shieldWizard();
+
+        if (dragonBot.stackSuper === 3) {
             dragonBot.stackSuper = 0;
         };
         return `<p>Damage blocked!</p>`;
@@ -51,7 +54,8 @@ class Wizard {
     receiveDamage(damage) {
         this.hp -= damage;
 
-        if(this.hp <= 0){
+        if (this.hp <= 0) {
+            document.getElementById("commands-button").style.visibility = "hidden";
             return `<p>The Wizard has died!</p>`;
         };
         return `<p>The Wizard has received ${damage} points of damage</p>`;
@@ -72,10 +76,11 @@ class Dragon {
     attackDragon() {
         this.strength1 = this.strength * diceSuperDamage();
         this.stackSuperDragon();
-        
+        canvasBoard.attackDragon()
+
         if (this.stackSuper === 4) {
             this.stackSuper = 0;
-            
+
             ctx.drawImage(imgDragonSuper, 930, 110, 400, 500);
             ctx.drawImage(imgDragon, 950, 250, 350, 350);
 
@@ -84,7 +89,7 @@ class Dragon {
         return this.strength1;
     };
 
-    stackSuperDragon(){
+    stackSuperDragon() {
         if (this.strength1 >= 1) {
             this.stackSuper += 1;
         } else {
@@ -94,8 +99,9 @@ class Dragon {
 
     receiveDamage(damage) {
         this.hp -= damage;
-        
+
         if (this.hp <= 0) {
+            document.getElementById("commands-button").style.visibility = "hidden";
             return `<p>The Dragon has died!</p>`;
         };
         return `<p>The Dragon has received ${damage} points of damage</p>`;
@@ -104,7 +110,6 @@ class Dragon {
 
     receiveSuperDamage(damage) {
         if (wizardPlayer.stackSuper < 3) {
-
             return `<p>You don't have mana enought...</p>`;
         }
         this.hp -= damage;
@@ -122,7 +127,7 @@ class Round {
     wizardAttack() {
         let receiveDamageDragon = dragonBot.receiveDamage(wizardPlayer.attackWizard());
 
-        if(dragonBot.hp >= 0 || wizardPlayer.hp >= 0){
+        if (dragonBot.hp >= 0 || wizardPlayer.hp >= 0) {
             return receiveDamageDragon;
         };
         return "";
@@ -130,8 +135,8 @@ class Round {
 
     dragonAttack() {
         let receiveDamageWizard = wizardPlayer.receiveDamage(dragonBot.attackDragon());
-        
-        if(wizardPlayer.hp >= 0 || dragonBot.hp >= 0){
+
+        if (wizardPlayer.hp >= 0 || dragonBot.hp >= 0) {
             return receiveDamageWizard;
         }
         return "";
@@ -183,22 +188,22 @@ playerCommandSuperAttack.onclick = () => {
     superAttackButton();
 };
 
-function attackButton() { 
+function attackButton() {
     playerCommands.innerHTML = rounds.wizardAttack();
     setTimeout(() => {
         receiveDmg();
     }, 3000);
-    
+
     setTimeout(() => {
         playerCommands.innerHTML = '';
         playerCommands.appendChild(attackButtonElement);
         playerCommands.appendChild(shieldButtonElement);
         playerCommands.appendChild(superAttackElement);
-        updateCanvas();
-    }, 5000);
+        canvasBoard.updateCanvas();
+    }, 6000);
 };
 
-function receiveDmg(){
+function receiveDmg() {
     playerCommands.innerHTML = rounds.dragonAttack();
 };
 
@@ -210,13 +215,13 @@ function shieldButton() {
         playerCommands.appendChild(attackButtonElement);
         playerCommands.appendChild(shieldButtonElement);
         playerCommands.appendChild(superAttackElement);
-        updateCanvas();
+        canvasBoard.updateCanvas();
     }, 3000);
 };
 
 function superAttackButton() {
     playerCommands.innerHTML = rounds.wizardSuperAttack();
-    
+
     setTimeout(() => {
         receiveDmg();
     }, 3000);
@@ -226,8 +231,8 @@ function superAttackButton() {
         playerCommands.appendChild(attackButtonElement);
         playerCommands.appendChild(shieldButtonElement);
         playerCommands.appendChild(superAttackElement);
-        updateCanvas();
-    }, 5000);
+        canvasBoard.updateCanvas();
+    }, 6000);
 };
 
 function hpBarWizard() {
@@ -244,13 +249,15 @@ function hpBarDragon() {
 
 };
 
-function mpBarWizard(){
+function mpBarWizard() {
     const mpPercent = wizardPlayer.stackSuper / 3;
-    
-    if(wizardPlayer.stackSuper <= 3){
-       return 250 * mpPercent;
+
+    if (wizardPlayer.stackSuper <= 3) {
+        return 250 * mpPercent;
     }
     return 250;
 };
+
+document.getElementById("commands-button").style.visibility = "hidden"
 
 
