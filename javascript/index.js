@@ -27,11 +27,17 @@ imgIconBoss.src = "./images/iconboss.png";
 const imgDragonSuper = new Image();
 imgDragonSuper.src = "./images/dragonsuper.png";
 
-const imgShield = new Image(); // Colocar
+const imgShield = new Image(); 
 imgShield.src = "./images/shield.png"
 
-const imgAttackDragon = new Image(); // Colocar
+const imgAttackDragon = new Image();
 imgAttackDragon.src = "./images/attackdragon.png";
+
+const imgSuperAttackDragon = new Image();
+imgSuperAttackDragon.src = "./images/superattackdragon.png";
+
+const imgSuperAttackWizard = new Image();
+imgSuperAttackWizard.src = "./images/superattackwizard.png";
 
 const imgAttackWizard = new Image();
 imgAttackWizard.src = "./images/attackwizard.png";
@@ -124,48 +130,105 @@ class Canvas {
 
         const attackAnimation = new Attacks(imgAttackWizard, 200, 950);
 
-        const timeAnimation = setInterval(() => {
-            this.updateCanvas();
-            attackAnimation.moveRight();
-            attackAnimation.draw();
-        }, 15);
+        if (dragonBot.hp >= 1 && wizardPlayer.hp >= 1){
+            const timeAnimation = setInterval(() => {
+                this.updateCanvas();
+                attackAnimation.moveRight();
+                attackAnimation.draw();
+            }, 15);
 
 
-        setTimeout(() => {
-            clearInterval(timeAnimation);
-        }, 1500);
+            setTimeout(() => {
+                clearInterval(timeAnimation);
+            }, 1500);
+        }
+
     };
 
     attackDragon() {
 
         const attackAnimation = new Attacks(imgAttackDragon, 950, 180);
 
+        if (dragonBot.stackSuper === 4 && dragonBot.hp >= 1 && wizardPlayer.hp >= 1){
+            this.superAttackDragon(); 
+        } else if (wizardPlayer.hp >= 1 && dragonBot.hp >= 1) {
+            const timeAnimation = setInterval(() => {
+                this.updateCanvas();
+                attackAnimation.moveLeft();
+                attackAnimation.draw();
+            }, 15);
+
+            setTimeout(() => {
+                clearInterval(timeAnimation);
+            }, 1800);
+        };
+    };
+
+    superAttackDragon(){
+        
+        const attackAnimation = new Attacks(imgSuperAttackDragon, 800, 150);
+
         const timeAnimation = setInterval(() => {
             this.updateCanvas();
             attackAnimation.moveLeft();
-            attackAnimation.draw();
+            attackAnimation.drawSuperDragon();
+            ctx.drawImage(imgDragonSuper, 930, 110, 400, 500);
+            ctx.drawImage(imgDragon, 950, 250, 350, 350);
         }, 15);
 
         setTimeout(() => {
             clearInterval(timeAnimation);
         }, 1800);
-    };
+    }
+
+    superAttackWizard(){
+        const attackAnimation = new Attacks(imgSuperAttackWizard, 200, 950);
+
+        const timeAnimation = setInterval(() => {
+            this.updateCanvas();
+            attackAnimation.moveRight();
+            attackAnimation.drawSuperWizard();
+            // ctx.drawImage(imgDragonSuper, 930, 110, 400, 500);
+            // ctx.drawImage(imgWizard, 950, 250, 350, 350);
+        }, 15);
+
+        setTimeout(() => {
+            clearInterval(timeAnimation);
+        }, 1800);
+    }
 
     shieldWizard() {
 
         const shieldAnimation = new Attacks(imgShield, 200, 180);
         const attackAnimation = new Attacks(imgAttackDragon, 950, 250);
+        const superAttackAnimation = new Attacks(imgSuperAttackDragon, 800, 210);
 
-        const timeAnimation = setInterval(() => {
-            this.updateCanvas();
-            shieldAnimation.draw();
-            attackAnimation.moveLeft();
-            attackAnimation.draw();
-        }, 20);
+        if (dragonBot.stackSuper === 3 ) {
+            
+            const timeAnimation = setInterval(() => {
+                this.updateCanvas();
+                shieldAnimation.draw();
+                superAttackAnimation.moveLeft();
+                superAttackAnimation.drawSuperDragon();
+                ctx.drawImage(imgDragonSuper, 930, 110, 400, 500);
+                ctx.drawImage(imgDragon, 950, 250, 350, 350);
+            }, 15);
 
-        setTimeout(() => {
-            clearInterval(timeAnimation);
-        }, 1800);    
+            setTimeout(() => {
+                clearInterval(timeAnimation);
+            }, 1800);
+        } else {
+            const timeAnimation = setInterval(() => {
+                this.updateCanvas();
+                shieldAnimation.draw();
+                attackAnimation.moveLeft();
+                attackAnimation.draw();
+            }, 20);
+
+            setTimeout(() => {
+                clearInterval(timeAnimation);
+            }, 1800);
+        }; 
     };
 
 };
@@ -204,6 +267,7 @@ function finalGame(){
         ctx.drawImage(imgWizard, 50, 400, 230, 200);
         ctx.drawImage(imgDragonDead, 950, 350, 350, 350);
     };
+
 };
 
 class Attacks {
@@ -216,8 +280,15 @@ class Attacks {
 
     draw() {
         ctx.drawImage(this.imgAttack, this.posInitial, 450, 100, 90);
-        
     };
+
+    drawSuperDragon(){
+        ctx.drawImage(this.imgAttack, this.posInitial, 400, 450, 150);
+    }
+
+    drawSuperWizard(){
+        ctx.drawImage(this.imgAttack, this.posInitial, 400, 200, 190);
+    }
 
     moveRight() {
         if(this.posInitial <= this.posEnd) {

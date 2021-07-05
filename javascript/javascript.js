@@ -20,8 +20,7 @@ class Wizard {
     attackWizard() {
         this.strength1 = this.strength * diceDamage();
         this.stackSuperAttack();
-
-        
+  
         canvasBoard.attackWizard();
 
         return this.strength1;
@@ -37,6 +36,8 @@ class Wizard {
 
     attackSuper() {
         if (this.stackSuper >= 3) {
+            canvasBoard.superAttackWizard();
+
             return this.strengthSuper * diceSuperDamage();
         };
     };
@@ -47,6 +48,7 @@ class Wizard {
 
         if (dragonBot.stackSuper === 3) {
             dragonBot.stackSuper = 0;
+            
         };
         return `<p>Damage blocked!</p>`;
     };
@@ -67,8 +69,8 @@ class Dragon {
     constructor() {
         this.hp = 1000;
         this.maxHp = 1000;
-        this.strength = 15;
-        this.strengthSuper = this.strength * 2;
+        this.strength = 10;
+        this.strengthSuper = this.strength * 2.5;
         this.stackSuper = 0;
         this.strength1 = 15;
     };
@@ -81,13 +83,11 @@ class Dragon {
         if (this.stackSuper === 4) {
             this.stackSuper = 0;
 
-            ctx.drawImage(imgDragonSuper, 930, 110, 400, 500);
-            ctx.drawImage(imgDragon, 950, 250, 350, 350);
-
             return this.strengthSuper * diceSuperDamage();
         };
         return this.strength1;
     };
+
 
     stackSuperDragon() {
         if (this.strength1 >= 1) {
@@ -110,7 +110,7 @@ class Dragon {
 
     receiveSuperDamage(damage) {
         if (wizardPlayer.stackSuper < 3) {
-            return `<p>You don't have mana enought...</p>`;
+            return `<p>You missed because you don't have enough mana.</p>`;
         }
         this.hp -= damage;
         wizardPlayer.stackSuper = 0;
@@ -156,6 +156,7 @@ const playerCommands = document.getElementById("commands-button");
 const playerCommandAttack = document.getElementById('command-attack');
 const playerCommandShield = document.getElementById('command-shield');
 const playerCommandSuperAttack = document.getElementById('command-superattack');
+const resetButton = document.getElementById('reset-button');
 
 // Button Elements
 
@@ -175,6 +176,10 @@ superAttackElement.addEventListener('click', superAttackButton);
 superAttackElement.innerText = 'Super Attack';
 
 // ---
+
+resetButton.onclick = () => {
+    document.location.reload(true);
+};
 
 playerCommandAttack.onclick = () => {
     attackButton();

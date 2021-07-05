@@ -29,8 +29,32 @@ body{
     margin-top: 50px;
 }
 
+#intro p{
+    margin: 15px 30px;
+    font-size: 25px;
+}
 
-#play-button{
+
+#intro button{
+    font-family: 'Iceland';
+    width: 150px;
+    font-size: 29px;
+    padding: 10px;
+    margin: 10px 90px;
+    border-radius: 15px;
+    border-color: rgb(108, 55, 30);
+}
+/* #play-button {
+    font-family: 'Iceland';
+    width: 150px;
+    font-size: 29px;
+    padding: 10px;
+    margin: auto 90px;
+    border-radius: 15px;
+    border-color: rgb(108, 55, 30);
+}
+
+#reset-button{
     font-family: 'Iceland';
     width: 150px;
     font-size: 29px;
@@ -38,7 +62,7 @@ body{
     margin: auto 90px 80px;
     border-radius: 15px;
     border-color: rgb(108, 55, 30);
-}
+} */
 
 #commands-button{
     display: flex;
